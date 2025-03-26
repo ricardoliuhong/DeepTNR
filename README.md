@@ -23,6 +23,33 @@ import Interface
 interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 ```
 
+Step2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
+=     
+
+```shell
+
+drugs=("X5.FLUOROURACIL" "AZ960" "AZD2014" "AZD4547" "AZD5363" "AZD5438" "AZD6482" "AZD7762" "AZD8055" "BI.2536" "BIBR.1532" "BMS.345541" "BMS.754807" "GSK1904529A" "I.BET.762" "LY2109761" "MG.132" "MK.1775" "MK.2206" "OSI.027" "OTX015" "P22077" "PLX.4720" "PRT062607" "VE.822" "AFATINIB" "ALISERTIB" "ALPELISIB" "AXITINIB" "BORTEZOMIB" "BUPARLISIB" "CAMPTOTHECIN" "CARMUSTINE" "CEDIRANIB" "CISPLATIN" "CRIZOTINIB" "CYCLOPHOSPHAMIDE" "CYTARABINE" "DABRAFENIB" "DASATINIB" "DINACICLIB" "DOCETAXEL" "ENTINOSTAT" "EPIRUBICIN" "ERLOTINIB" "FLUDARABINE" "FORETINIB" "FULVESTRANT" "GEFITINIB" "GEMCITABINE" "IBRUTINIB" "IRINOTECAN" "LAPATINIB" "LINSITINIB" "MITOXANTRONE" "NAVITOCLAX" "NELARABINE" "NILOTINIB" "NIRAPARIB" "OLAPARIB" "OSIMERTINIB" "OXALIPLATIN" "PACLITAXEL" "PALBOCICLIB" "PEVONEDISTAT" "RIBOCICLIB" "RUXOLITINIB" "SELUMETINIB" "SORAFENIB" "TALAZOPARIB" "TAMOXIFEN" "TASELISIB" "TEMOZOLOMIDE" "TENIPOSIDE" "TOPOTECAN" "TOZASERTIB" "TRAMETINIB" "UPROSERTIB" "VENETOCLAX" "VINBLASTINE" "VINCRISTINE" "VINORELBINE" "VORINOSTAT")
+device='cuda:0'
+
+scRNA_dataset='CRC2_annotated.h5ad'
+
+for drug in "${drugs[@]}"
+do
+    echo "Running crossgraph.py for drug: $drug"
+    python -u crossgraph.py \
+        --source_features "DeepTNR_Data/${drug}_Bulk_features.npy" \
+        --target_features "DeepTNR_Data/scRNA_features.npy" \
+        --source_edge_index "DeepTNR_Data/${drug}_Bulk_edge_index.npy" \
+        --target_edge_index "DeepTNR_Data/scRNA_edge_index.npy" \
+        --scRNA_dataset "DeepTNR_Data/$scRNA_dataset" \
+        --Drug $drug \
+        --source_labels "DeepTNR_Data/${drug}_Bulk_labels.npy" \
+        --model "GAT" \ 
+        --device $device  
+
+    echo "Finished running crossgraph.py for drug: $drug"
+done
+```
 
  
      

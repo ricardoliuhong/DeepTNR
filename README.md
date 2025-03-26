@@ -5,6 +5,8 @@ Step1 "Spatial Transcriptomics Data Preprocessing"
 =     
   1.Initial data processing step in R
 -
+```r
+
 source("ST_interface.R")
 source("ST_pre.R")
 data_dirs <- list.dirs(path = ".", full.names = FALSE, recursive = FALSE)
@@ -12,11 +14,14 @@ data_dirs <- data_dirs[grepl("^VISDS", data_dirs)] ######       Filter folders s
 for (dir in data_dirs) {
   process_data_set(dir)
 }
+```
 
  2.Get tumor-stroma immune interface in Python
 - 
+```python
 import Interface
 interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
+```
 
 
  

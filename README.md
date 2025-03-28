@@ -9,7 +9,8 @@ Step 0 "Installation and setup"
 - 
 ```shell
 git clone https://github.com/ricardoliuhong/DeepTNR.git
-conda env create -f environment.yamlconda activate DeepTNR
+conda env create -f environment.yaml
+conda activate DeepTNR
 ```
   2.Set up the R environment
 - 

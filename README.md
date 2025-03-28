@@ -1,8 +1,9 @@
 Predicting drug sensitivity with spatial precision across and beyond the tumor-stroma immune interface via deep graph contrastive and transfer learning
-=
+-
 Abstract
 -
 The complexity of tumor heterogeneity presents a significant challenge to precision oncology. Single-cell RNA sequencing (scRNA-seq) has achieved remarkable advances in uncovering subtle gene expression variations within and beyond tumors, driving personalized cancer treatment. Spatial transcriptomics (ST) complements this by precisely mapping gene expression in intact tissues, deepening our understanding of tumor heterogeneity. ST enables researchers to identify malignant features at single-cell or regional levels, providing essential insights for developing targeted therapies. Despite the availability of tools to predict drug sensitivity at the single-cell level, they often overlook spatial differences in the distribution of drug-sensitive and drug-resistant cells. This can lead to predictions of high overall sensitivity, while specific tumor regions exhibit low sensitivity or weak spatial autocorrelation among sensitive cells, undermining treatment efficacy. To address this challenge, we introduce DeepTNR (Deep Learning for Tumor Niche Response), a novel computational framework that leverages deep graph contrastive learning and transfer learning. This method captures both gene expression profiles and spatial distribution patterns within tissues, advancing the effectiveness of personalized cancer therapies. We applied DeepTNR to the spatial transcriptome profiles of nine cancer types, utilizing a dataset comprising 37 samples and 81,667 cell spots, with colorectal cancer (CRC) highlighted as a case study.
+-
 ![Fig 1](https://github.com/user-attachments/assets/414940e5-8642-4730-aabf-61aba273ff90)
 
 Step 0 "Installation and setup"
@@ -67,7 +68,7 @@ interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 Step 2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   
 
-  1.
+  1.Create feature graphs in Python   ### We have wrapped it into a function. You just need to enter the following information in the command line:
 -  
 
 ```shell
@@ -76,18 +77,18 @@ drugs=("X5.FLUOROURACIL" "AZ960" "AZD2014" "AZD4547" "AZD5363" "AZD5438" "AZD648
 
 expid=1
 device='cuda:0'
-val_dataset='CRC2_val_adata.h5ad'
-train_dataset='Bulk_train_adata.h5ad'
-train_expression_file='Bulk_features.csv'
-train_binary_labels_file='Bulk_train_labels.csv'
-val_binary_labels_file='Bulk_val_labels.csv'
-scRNA_dataset='CRC2.h5ad'
-expression_file='ALL_expression.csv'
+val_dataset='CRC2_val_adata.h5ad'  ### Modify the prefix when the data changes.  
+train_dataset='Bulk_train_adata.h5ad' ###No changes needed
+train_expression_file='Bulk_features.csv' ###No changes needed
+train_binary_labels_file='Bulk_train_labels.csv' ###No changes needed
+val_binary_labels_file='Bulk_val_labels.csv' ###No changes needed
+scRNA_dataset='CRC2.h5ad' ### Modify the prefix when the data changes.
+expression_file='ALL_expression.csv'  ###No changes needed
 binary_labels_file='ALL_label_binary_wf.csv'
-output_prefix='CRC2'
-visium_path='VISDS000772'
-count_file='filtered_feature_bc_matrix.h5'
-output_file='CRC2_DeepTNR.h5ad'
+output_prefix='CRC2'  ### sample name
+visium_path='VISDS000772' ###  ST access number
+count_file='filtered_feature_bc_matrix.h5' ###No changes needed
+output_file='CRC2_DeepTNR.h5ad'     ###Modify the prefix when the data changes.
 
 for drug in "${drugs[@]}"
 do

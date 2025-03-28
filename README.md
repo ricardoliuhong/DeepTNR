@@ -2,7 +2,7 @@ The complexity of tumor heterogeneity presents a significant challenge to precis
 ![Fig 1](https://github.com/user-attachments/assets/414940e5-8642-4730-aabf-61aba273ff90)
 
 Step1 "Spatial Transcriptomics Data Preprocessing"
-=     
+-     
   1.Initial data processing step in R
 -
 ```r
@@ -24,7 +24,7 @@ interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 ```
 
 Step2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
-=   
+-   
 
   1.
 -  

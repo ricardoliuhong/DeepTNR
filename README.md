@@ -24,14 +24,64 @@ interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 ```
 
 Step2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
-=     
+=   
+
+  1.
+-  
 
 ```shell
 
 drugs=("X5.FLUOROURACIL" "AZ960" "AZD2014" "AZD4547" "AZD5363" "AZD5438" "AZD6482" "AZD7762" "AZD8055" "BI.2536" "BIBR.1532" "BMS.345541" "BMS.754807" "GSK1904529A" "I.BET.762" "LY2109761" "MG.132" "MK.1775" "MK.2206" "OSI.027" "OTX015" "P22077" "PLX.4720" "PRT062607" "VE.822" "AFATINIB" "ALISERTIB" "ALPELISIB" "AXITINIB" "BORTEZOMIB" "BUPARLISIB" "CAMPTOTHECIN" "CARMUSTINE" "CEDIRANIB" "CISPLATIN" "CRIZOTINIB" "CYCLOPHOSPHAMIDE" "CYTARABINE" "DABRAFENIB" "DASATINIB" "DINACICLIB" "DOCETAXEL" "ENTINOSTAT" "EPIRUBICIN" "ERLOTINIB" "FLUDARABINE" "FORETINIB" "FULVESTRANT" "GEFITINIB" "GEMCITABINE" "IBRUTINIB" "IRINOTECAN" "LAPATINIB" "LINSITINIB" "MITOXANTRONE" "NAVITOCLAX" "NELARABINE" "NILOTINIB" "NIRAPARIB" "OLAPARIB" "OSIMERTINIB" "OXALIPLATIN" "PACLITAXEL" "PALBOCICLIB" "PEVONEDISTAT" "RIBOCICLIB" "RUXOLITINIB" "SELUMETINIB" "SORAFENIB" "TALAZOPARIB" "TAMOXIFEN" "TASELISIB" "TEMOZOLOMIDE" "TENIPOSIDE" "TOPOTECAN" "TOZASERTIB" "TRAMETINIB" "UPROSERTIB" "VENETOCLAX" "VINBLASTINE" "VINCRISTINE" "VINORELBINE" "VORINOSTAT")
+
+expid=1
+device='cuda:0'
+val_dataset='CRC2_val_adata.h5ad'
+train_dataset='Bulk_train_adata.h5ad'
+train_expression_file='Bulk_features.csv'
+train_binary_labels_file='Bulk_train_labels.csv'
+val_binary_labels_file='Bulk_val_labels.csv'
+scRNA_dataset='CRC2.h5ad'
+expression_file='ALL_expression.csv'
+binary_labels_file='ALL_label_binary_wf.csv'
+output_prefix='CRC2'
+visium_path='VISDS000772'
+count_file='filtered_feature_bc_matrix.h5'
+output_file='CRC2_DeepTNR.h5ad'
+
+for drug in "${drugs[@]}"
+do
+    echo "Processing drug: $drug"
+    
+    # 执行Python脚本
+    python -u pre.py \
+        --expid $expid \
+        --device $device \
+        --train_dataset $train_dataset \
+        --train_expression_file $train_expression_file \
+        --train_binary_labels_file $train_binary_labels_file \
+        --scRNA_dataset $scRNA_dataset \
+        --expression_file $expression_file \
+        --output_prefix $output_prefix \
+        --Drug $drug \
+        --visium_path $visium_path \
+        --count_file $count_file \
+        --output_file $output_file
+    
+    echo "Finished processing drug: $drug"
+done
+```
+
+
+
+
+
+
+```shell
+
+
 device='cuda:0'
 
-scRNA_dataset='CRC2_annotated.h5ad'
+scRNA_dataset='CRC2_DeepTNR.h5ad'
 
 for drug in "${drugs[@]}"
 do

@@ -82,7 +82,7 @@ train_dataset='Bulk_train_adata.h5ad' ###No changes needed
 train_expression_file='Bulk_features.csv' ###No changes needed
 train_binary_labels_file='Bulk_train_labels.csv' ###No changes needed
 val_binary_labels_file='Bulk_val_labels.csv' ###No changes needed
-scRNA_dataset='CRC2.h5ad' ### Modify the prefix when the data changes.
+Spatial_dataset='CRC2.h5ad' ### Modify the prefix when the data changes.
 expression_file='ALL_expression.csv'  ###No changes needed
 binary_labels_file='ALL_label_binary_wf.csv'
 output_prefix='CRC2'  ### sample name
@@ -101,7 +101,7 @@ do
         --train_dataset $train_dataset \
         --train_expression_file $train_expression_file \
         --train_binary_labels_file $train_binary_labels_file \
-        --scRNA_dataset $scRNA_dataset \
+        --Spatial_dataset $Spatial_dataset \
         --expression_file $expression_file \
         --output_prefix $output_prefix \
         --Drug $drug \
@@ -121,7 +121,7 @@ done
 
 ```shell
 device='cuda:0'
-scRNA_dataset='CRC2_DeepTNR.h5ad'
+Spatial_dataset='CRC2_DeepTNR.h5ad'
 for drug in "${drugs[@]}"
 do
     echo "Running crossgraph.py for drug: $drug"
@@ -130,7 +130,7 @@ do
         --target_features "DeepTNR_Data/scRNA_features.npy" \
         --source_edge_index "DeepTNR_Data/${drug}_Bulk_edge_index.npy" \
         --target_edge_index "DeepTNR_Data/scRNA_edge_index.npy" \
-        --scRNA_dataset "DeepTNR_Data/$scRNA_dataset" \
+        --Spatial_dataset "DeepTNR_Data/$Spatial_dataset" \
         --Drug $drug \
         --source_labels "DeepTNR_Data/${drug}_Bulk_labels.npy" \
         --model "GAT" \ 

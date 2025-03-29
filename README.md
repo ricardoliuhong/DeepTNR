@@ -3,7 +3,7 @@ Predicting drug sensitivity with spatial precision across and beyond the tumor-s
 Abstract
 -
 The complexity of tumor heterogeneity presents a significant challenge to precision oncology. Single-cell RNA sequencing (scRNA-seq) has achieved remarkable advances in uncovering subtle gene expression variations within and beyond tumors, driving personalized cancer treatment. Spatial transcriptomics (ST) complements this by precisely mapping gene expression in intact tissues, deepening our understanding of tumor heterogeneity. ST enables researchers to identify malignant features at single-cell or regional levels, providing essential insights for developing targeted therapies. Despite the availability of tools to predict drug sensitivity at the single-cell level, they often overlook spatial differences in the distribution of drug-sensitive and drug-resistant cells. This can lead to predictions of high overall sensitivity, while specific tumor regions exhibit low sensitivity or weak spatial autocorrelation among sensitive cells, undermining treatment efficacy. To address this challenge, we introduce DeepTNR (Deep Learning for Tumor Niche Response), a novel computational framework that leverages deep graph contrastive learning and transfer learning. This method captures both gene expression profiles and spatial distribution patterns within tissues, advancing the effectiveness of personalized cancer therapies. We applied DeepTNR to the spatial transcriptome profiles of nine cancer types, utilizing a dataset comprising 37 samples and 81,667 cell spots, with colorectal cancer (CRC) highlighted as a case study.
--
+
 ![Fig 1](https://github.com/user-attachments/assets/414940e5-8642-4730-aabf-61aba273ff90)
 
 Step 0 "Installation and setup"
@@ -68,7 +68,7 @@ interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 Step 2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   
 
-  1.Create feature graphs in Python   ### We have wrapped it into a function. You just need to enter the following information in the command line:
+  1.Create feature graphs in Python   
 -  
 
 ```shell

@@ -116,16 +116,12 @@ done
 
 
 
-  2.Create feature graphs in Python   
+  2.Predicting drug sensitivity 
 -  
 
 ```shell
-
-
 device='cuda:0'
-
 scRNA_dataset='CRC2_DeepTNR.h5ad'
-
 for drug in "${drugs[@]}"
 do
     echo "Running crossgraph.py for drug: $drug"
@@ -143,6 +139,13 @@ do
     echo "Finished running crossgraph.py for drug: $drug"
 done
 ```
+  3."Spatial autocorrelation analysis"
+-  
+
+```python
+Interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
+```  
+  
 
  
      

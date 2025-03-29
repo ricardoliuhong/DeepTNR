@@ -94,7 +94,7 @@ for drug in "${drugs[@]}"
 do
     echo "Processing drug: $drug"
     
-    # 执行Python脚本
+    # Run Python script
     python -u pre.py \
         --expid $expid \
         --device $device \
@@ -116,7 +116,8 @@ done
 
 
 
-
+  2.Create feature graphs in Python   
+-  
 
 ```shell
 

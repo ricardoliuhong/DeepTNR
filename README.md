@@ -9,14 +9,14 @@ The complexity of tumor heterogeneity presents a significant challenge to precis
 Step 0 "Installation and setup"
 -     
   1.Set up the Python environment
-- 
+
 ```shell
 git clone https://github.com/ricardoliuhong/DeepTNR.git
 conda env create -f environment.yaml
 conda activate DeepTNR
 ```
   2.Set up the R environment
-- 
+ 
 ```R
 #R version = 4.40
 # install.packages("devtools")
@@ -42,14 +42,14 @@ lapply(names(versions), function(pkg) {
 
   3.Download sample data
 Example data including spatial transcriptome profiles and cell line RNA expression data can be accessed at: [Data](https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=sharing)
--
+
 
 
 
 Step 1 "Spatial Transcriptomics Data Preprocessing"
 -     
   1.Initial data processing step in R
--
+
 ```r
 
 source("ST_interface.R")
@@ -62,7 +62,7 @@ for (dir in data_dirs) {
 ```
 
  2.Get tumor-stroma immune interface in Python
-- 
+ 
 ```python
 import Interface
 interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
@@ -73,7 +73,7 @@ Step 2 "Predicting drug sensitivity in spatial transcriptomics of tumors via dee
 -   
 
   1.Create feature graphs in Python   
--  
+
 
 ```shell
 
@@ -121,7 +121,7 @@ done
 
 
   2.Predicting drug sensitivity 
--  
+  
 
 ```shell
 device='cuda:0'
@@ -144,7 +144,7 @@ do
 done
 ```
   3."Spatial autocorrelation analysis"
--  
+  
 [123](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks/examples/intro.html)
 ```python
 Interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')

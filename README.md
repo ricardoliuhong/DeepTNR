@@ -154,7 +154,10 @@ Step 3 "Downstream analyses "
 -
 ![CRC2_DOCETAXEL_sensitivity_classification](https://github.com/user-attachments/assets/06a04aa1-0fde-4e08-a9e1-906934585488)
 
-
+CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  # 替换为实际的 CSV 文件路径
+CRC2_folder = "CRC2_Result"  # 替换为实际的保存文件夹路径
+plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "DOCETAXEL", CRC2_folder)
+plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "IRINOTECAN", CRC2_folder)
 
 
 

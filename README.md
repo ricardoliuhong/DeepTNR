@@ -69,7 +69,7 @@ interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 
 ```
 
-Step 2 "Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
+Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   
 
   1.Create feature graphs in Python   
@@ -143,7 +143,7 @@ do
     echo "Finished running crossgraph.py for drug: $drug"
 done
 ```
-  3."Spatial autocorrelation analysis"
+  3.Spatial autocorrelation analysis
  - 
 
 ```python

@@ -143,7 +143,7 @@ do
     echo "Finished running crossgraph.py for drug: $drug"
 done
 ```
-  3.Spatial autocorrelation analysis
+  3.Visualization of predicted results
  - 
 
 ```python

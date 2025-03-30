@@ -148,8 +148,16 @@ done
 
 ```python
 Interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
-```  
-  
+```
+
+Step 3 "Downstream analyses " 
+-
+![CRC2_DOCETAXEL_sensitivity_classification](https://github.com/user-attachments/assets/06a04aa1-0fde-4e08-a9e1-906934585488)
+
+
+
+
+
 
  
      

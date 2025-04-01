@@ -154,7 +154,7 @@ done
 Step 3 "Downstream analyses " 
 -
   1.Spatial_Autocorrelation
- ```pythom 
+```python
 CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
 CRC2_folder = "CRC2_Result"  
 plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder)

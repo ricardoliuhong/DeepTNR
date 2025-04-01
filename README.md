@@ -152,13 +152,15 @@ Interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 
 Step 3 "Downstream analyses " 
 -
+
+
 ![CRC2_CEDIRANIB_sensitivity_classification](https://github.com/user-attachments/assets/1e85e928-811d-4da0-a5ee-f51b2578a5ce)
 ```python
 CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
 CRC2_folder = "CRC2_Result"  
 plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "IRINOTECAN", CRC2_folder)
 ```
-![IRINOTECAN_Spatial_Autocorrelation](https://github.com/user-attachments/assets/89bbc626-7685-4a7e-ad8b-305b8df8d0f5)
+![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 
 
 

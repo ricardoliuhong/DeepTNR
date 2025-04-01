@@ -157,7 +157,7 @@ Step 3 "Downstream analyses "
 CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
 CRC2_folder = "CRC2_Result"  
 plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder)
-```
+
 ![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 
 

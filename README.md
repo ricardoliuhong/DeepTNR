@@ -145,20 +145,18 @@ done
 ```
   3.Visualization of predicted results
  - 
+ ###Here we use the CEDIRANIB prediction results as an example
+```Python
 
-```python
-Interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 ```
+![CRC2_CEDIRANIB_sensitivity_classification](https://github.com/user-attachments/assets/1e85e928-811d-4da0-a5ee-f51b2578a5ce)
 
 Step 3 "Downstream analyses " 
 -
-
-
-![CRC2_CEDIRANIB_sensitivity_classification](https://github.com/user-attachments/assets/1e85e928-811d-4da0-a5ee-f51b2578a5ce)
-```python
+  1.Spatial_Autocorrelation
 CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
 CRC2_folder = "CRC2_Result"  
-plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "IRINOTECAN", CRC2_folder)
+plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder)
 ```
 ![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 

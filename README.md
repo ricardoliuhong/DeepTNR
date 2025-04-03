@@ -42,8 +42,7 @@ lapply(names(versions), function(pkg) {
 
   3.Download sample data
 -
-Example data including spatial transcriptome profiles and cell line RNA expression data can be accessed at: [Data](https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=sharing)
-
+Example data including spatial transcriptome profiles and cell line RNA expression data can be accessed at: [Data](https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=sharing) Then put the data files into the “Spatial Transcriptomics Data Preprocessing” folder.
 
 
 

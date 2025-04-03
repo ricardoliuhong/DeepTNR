@@ -216,11 +216,53 @@ sa.plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder
 
 Step 3 "Downstream analyses " 
 -
+  1.  Inferring the correlation between cell deconvolution results and sensitivity
+```R
+library("SpaCET")
+library("Seurat")
+library("ggplot2")
+library("cowplot")
+library("dplyr")
+library("hdf5r")
+#'Malignant', 'CAF', 'Endothelial', 'Plasma', 'B cell', 'T CD4', 'T CD8', 'NK', 
+#'cDC', 'pDC', 'Macrophage', 'Mast', 'Neutrophil'
+#'
+VISDS000772_SpaCET_obj=readRDS("VISDS000772_SpaCET_obj.rds")
+CRC2=VISDS000772_SpaCET_obj
+pdf("Malignant.pdf", width = 10, height = 8)  
+SpaCET.visualize.spatialFeature(
+  CRC2, 
+  spatialType = "CellFraction", 
+  spatialFeatures=c("Malignant")
+)
+```
+  2.Inferring cancer cell status and its correlation with sensitivity
+  ## These are the tumor cell states:   "Cycle, Stress, Interferon, Hypoxia, Oxphos, Metal, cEMT, pEMT, Alveolar, Basal, Squamous, Glandular, Ciliated, AC, OPC, NPC"
+```R
 
-
-
-
-
+library(SpaCET)
+library(Seurat)
+library(dplyr)
+VISDS000772_SpaCET_obj=readRDS("VISDS000772_SpaCET_obj.rds")
+CRC2=VISDS000772_SpaCET_obj
+# run gene set calculation
+gmt2 <- read.gmt("CancerCellState.gmt")
+CRC2 <- SpaCET.GeneSetScore(CRC2, GeneSets = gmt2)
+CRC2@results$GeneSetScore[1:6,1:6]
+rownames(CRC2@results$GeneSetScore)
+output_dir <- "CRC2_GeneSet_Plots"
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir)
+}
+# Cycle
+pdf(file = file.path(output_dir, "CRC2_Cycle.pdf"), width = 6.2, height = 5)
+SpaCET.visualize.spatialFeature(
+  CRC2, 
+  spatialType = "GeneSetScore",
+  spatialFeatures = "Cycle"
+)
+dev.off()
+```
 
  
      

@@ -147,19 +147,75 @@ done
  - 
  ###Here we use the CEDIRANIB prediction results as an example
 ```Python
+import Visualization as vis
+file_paths = [
+    "CRC2_DeepTNR.h5ad",      # Replace with your actual adata file path
+    "VISDS000772_prop_mat.csv", # Replace with your deconvolution file path
+    "VISDS000772_interface_data.csv"      # Replace with your interface file path
+]
+drugs = ["CRIZOTINIB"]
+cancer_sample_name = "CRC2"
 
+
+file_paths = tuple(file_paths)
+Results_folder = f"{cancer_sample_name}_Result"
+SpatialAutocorrelation = f"{Results_folder}/{cancer_sample_name}_SpatialAutocorrelation"
+# Run the main function
+adata = vis.main(file_paths, drugs)
+# Organize spatial autocorrelation results and save to CSV
+summary_df = vis.summarize_spatial_autocorrelation(adata, drugs, save_folder=SpatialAutocorrelation)
+# Print the finishing result
+print(summary_df)
+# Define color palettes
+Drug_Sensitivity_map = {
+    '1.0': '#E69f00',  # Orange
+    '0.0': '#56b4e9'   # Blue
+}
+Cell_color = {
+    'High sensitive': '#FF0000',
+    'Low sensitive': '#e85a71',
+    'Uncertain': '#D3D3D3',
+    'High resistant': '#0072B2',
+    'Low resistant': '#87CEEB',
+    'Unknown': '#808080'
+}
+Region_color = {
+    'Stroma': '#56b4e9',
+    'Tumor': '#E69f00',
+    'Interface': '#EE0C0C'
+}
+# Plot drug sensitivity distributions
+for drug in drugs:
+    vis.plot_drug_sensitivity(adata, drug, Results_folder)
+# Plot the distribution of sensitivity classifications
+for drug in drugs:
+    vis.plot_sensitivity_classification(adata, drug, Cell_color, Results_folder)
+# Plot the regional distribution
+vis.plot_region_distribution(adata, Region_color, Results_folder)
+# Calculate tumor sensitivity means and export the top 2 and bottom 2 drugs
+tumor_sensitivity_means_df, top_2_drugs, bottom_2_drugs = vis.calculate_tumor_sensitivity_means(adata, drugs, save_folder=Results_folder)
+# Print the results
+print("\nTop 2 drugs with the highest mean sensitivity in Tumor region:")
+print(top_2_drugs)
+print("\nBottom 2 drugs with the lowest mean sensitivity in Tumor region:")
+print(bottom_2_drugs)
 ```
+![CEDIRANIB_sensitivity](https://github.com/user-attachments/assets/fb46c2f7-41a5-4755-bfea-54eb38de5c90)
 ![CRC2_CEDIRANIB_sensitivity_classification](https://github.com/user-attachments/assets/1e85e928-811d-4da0-a5ee-f51b2578a5ce)
+  
+  4.Infer spatial autocorrelation
+-
+  
+```python
+import Spatial_autocorrelation as sa
+CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
+CRC2_folder = "CRC2_Result"  
+sa.plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder)
+```
+![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 
 Step 3 "Downstream analyses " 
 -
-  1.Spatial_Autocorrelation
-```python
-CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
-CRC2_folder = "CRC2_Result"  
-plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder)
-```
-![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 
 
 

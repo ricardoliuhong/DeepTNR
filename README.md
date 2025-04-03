@@ -122,7 +122,7 @@ done
 
   2.Predicting drug sensitivity 
  - 
-
+In python
 ```shell
 device='cuda:0'
 Spatial_dataset='CRC2_DeepTNR.h5ad'
@@ -145,6 +145,7 @@ done
 ```
   3.Visualization of predicted results
  - 
+ In python
  ###Here we use the CEDIRANIB prediction results as an example
 ```Python
 import Visualization as vis
@@ -205,7 +206,7 @@ print(bottom_2_drugs)
   
   4.Infer spatial autocorrelation
 -
-  
+In python  
 ```python
 import Spatial_autocorrelation as sa
 CRC2_csv_path = "CRC2_SpatialAutocorrelation.csv"  
@@ -214,9 +215,11 @@ sa.plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder
 ```
 ![CEDIRANIB_Spatial_Autocorrelation](https://github.com/user-attachments/assets/cd0fde7f-bf58-403b-9436-095bd3aa5703)
 
-Step 3 "Downstream analyses " 
+Step 3 "Downstream analyses "  We have built upon existing advanced spatial transcriptomics tools as a complement to DeepTNR to investigate the relationship between the tumor-stroma-immune interface and drug sensitivity. 
 -
-  1.  Inferring the correlation between cell deconvolution results and sensitivity
+  1.Inferring the correlation between cell deconvolution results and sensitivity
+-
+In R
 ```R
 library("SpaCET")
 library("Seurat")
@@ -236,8 +239,13 @@ SpaCET.visualize.spatialFeature(
   spatialFeatures=c("Malignant")
 )
 ```
-  2.Inferring cancer cell status and its correlation with sensitivity
+  2.Inferring cancer cell status and its correlation with sensitivity   
+ - 
+In R
+ 
   ## These are the tumor cell states:   "Cycle, Stress, Interferon, Hypoxia, Oxphos, Metal, cEMT, pEMT, Alveolar, Basal, Squamous, Glandular, Ciliated, AC, OPC, NPC"
+  
+
 ```R
 
 library(SpaCET)
@@ -263,8 +271,74 @@ SpaCET.visualize.spatialFeature(
 )
 dev.off()
 ```
+  3.Inferring the direction and strength of spatial transcriptome signaling flows
+-
+In python
+```
+import os
+import gc
+import ot
+import pickle
+import anndata
+import scanpy as sc
+import pandas as pd
+import numpy as np
+from scipy import sparse
+from scipy.stats import spearmanr, pearsonr
+from scipy.spatial import distance_matrix
+import matplotlib.pyplot as plt
 
- 
+import commot as ct
+adata=sc.read("CRC2.h5ad")
+
+adata.raw = adata
+adata_dis500 = adata.copy()
+
+sc.tl.pca(adata, svd_solver='arpack')
+sc.pp.neighbors(adata, n_neighbors=10, n_pcs=40)
+sc.tl.umap(adata)
+sc.tl.leiden(adata, resolution=0.4)
+
+
+df_cellchat = ct.pp.ligand_receptor_database(species='human', signaling_type='Secreted Signaling', database='CellChat')
+print(df_cellchat.shape)
+df_cellchat_filtered = ct.pp.filter_lr_database(df_cellchat, adata_dis500, min_cell_pct=0.05)
+print(df_cellchat_filtered.shape)
+print(df_cellchat_filtered.head())
+df_cellchat.to_csv('CRC2_df_cellchat.csv', index=False)
+ct.tl.spatial_communication(
+    adata_dis500,
+    database_name='cellchat',
+    df_ligrec=df_cellchat_filtered,
+    dis_thr=500,
+    heteromeric=True,
+    pathway_sum=True
+)
+
+ct.tl.communication_direction(
+    adata_dis500,
+    database_name='cellchat',
+    pathway_name='MK', 
+    k=5
+)
+ct.pl.plot_cell_communication(
+    adata_dis500,
+    database_name='cellchat',
+    pathway_name='MK',  
+    plot_method='grid',
+    background_legend=True,
+    scale=0.0003,
+    ndsize=4,
+    grid_density=0.4,
+    summary='sender',
+    background='image',
+    clustering='leiden',
+    cmap='Alphabet',
+    normalize_v=True,
+    normalize_v_quantile=0.995,
+    filename='CRC2_MK.pdf'
+)
+``` 
      
     
   

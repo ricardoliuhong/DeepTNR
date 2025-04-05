@@ -64,8 +64,8 @@ for (dir in data_dirs) {
  2.Get tumor-stroma immune interface in Python
 -
 ```python
-import Interface
-interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
+import Interface as is
+is.interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
 
 ```
 

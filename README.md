@@ -1,4 +1,4 @@
-Predicting drug sensitivity with spatial precision across and beyond the tumor-stroma immune interface via deep graph contrastive and transfer learning
+Spatially resolved prediction of drug sensitivity in the tumor microenvironment via deep graph contrastive and transfer learning
 -
 Abstract
 -

@@ -99,7 +99,7 @@ do
     echo "Processing drug: $drug"
     
     # Run Python script
-    python -u pre.py \
+    python -u DeepTNR_pre.py \
         --expid $expid \
         --device $device \
         --train_dataset $train_dataset \
@@ -128,8 +128,8 @@ device='cuda:0'
 Spatial_dataset='CRC2_DeepTNR.h5ad'
 for drug in "${drugs[@]}"
 do
-    echo "Running crossgraph.py for drug: $drug"
-    python -u crossgraph.py \
+    echo "Running DeepTNR.py for drug: $drug"
+    python -u DeepTNR.py \
         --source_features "DeepTNR_Data/${drug}_Bulk_features.npy" \
         --target_features "DeepTNR_Data/scRNA_features.npy" \
         --source_edge_index "DeepTNR_Data/${drug}_Bulk_edge_index.npy" \

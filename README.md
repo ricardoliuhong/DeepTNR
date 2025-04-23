@@ -1,10 +1,9 @@
 Spatially resolved prediction of drug sensitivity in the tumor microenvironment via deep graph contrastive and transfer learning
 -
-Abstract
--
 Background
 -
 Tumor microenvironment heterogeneity remains a key barrier to precision oncology. While single-cell RNA sequencing (scRNA-seq) captures intratumoral gene expression diversity, existing drug sensitivity models often overlook spatial variation in drug-responsive cell populations across tumor–stroma immune interface. As a result, they may overestimate overall sensitivity despite low local response or weak spatial clustering, compromising therapeutic efficacy.
+
 Methods
 -
 To address this challenge, we present DeepTNR (Deep Learning for Tumor Niche Response), an innovative computational framework that integrates deep graph contrastive learning with transfer learning to model tumor-microenvironment interactions. The predicted drug sensitivity profiles are then combined with tumor-stroma immune interface features and spatial autocorrelation analysis to identify the most effective therapeutic candidates. We applied DeepTNR to spatial transcriptomic datasets from nine tumor types and selected colorectal cancer (CRC) as a case study due to its pronounced spatial heterogeneity and microinfiltrative architecture. 

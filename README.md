@@ -229,7 +229,7 @@ sa.plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder
    5
 -
 
-!
+!<img width="3958" height="1177" alt="Image" src="https://github.com/user-attachments/assets/a23dd672-924b-4dd5-bc92-e16e3944419a" />
 -
 
 

@@ -228,7 +228,7 @@ sa.plot_spatial_autocorrelation_for_drug(CRC2_csv_path, "CEDIRANIB", CRC2_folder
 
    5
 -
-![CRC3_细胞通讯.pdf](https://github.com/user-attachments/files/26002695/CRC3_.pdf)
+
 !
 -
 

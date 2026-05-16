@@ -1,5 +1,5 @@
 -
-Heterogeneity within the tumor microenvironment remains a major obstacle to precision oncology. Although single-cell RNA sequencing captures intratumoral gene expression diversity, most drug sensitivity models fail to account for spatial variations in drug-responsive cell populations, particularly across the tumor–stroma immune interface. To address this, we propose DeepTNR, a framework integrating deep graph contrastive learning with transfer learning to model spatial interactions within the TME. By incorporating tumor–stroma interface features, spatial autocorrelation, and proximity-based cellular interactions that capture distance dependent effects of effector cells on drug responsive target cells within local niches, DeepTNR enables spatially resolved drug sensitivity prediction. Applied to nine tumor types, with colorectal cancer (CRC) as a representative case, DeepTNR reveals that irinotecan exhibits the strongest sensitivity with significant spatial autocorrelation (Moran’s I). Spatial proximity effect analysis shows that local enrichment of immune and proliferative programs positively correlates with irinotecan sensitivity. These findings demonstrate DeepTNR's ability to spatially map intratumoral therapeutic heterogeneity and identify niche-specific vulnerabilities. 
+DeepTNR: predicting tumor drug sensitivity from spatial transcriptomics with deep graph contrastive and transfer learning
 
 Step 0 "Installation and setup"
 -     
@@ -72,7 +72,7 @@ Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep
 
 ```shell
 
-drugs=("X5.FLUOROURACIL" "AZ960" "AZD2014" "AZD4547" "AZD5363" "AZD5438" "AZD6482" "AZD7762" "AZD8055" "BI.2536" "BIBR.1532" "BMS.345541" "BMS.754807" "GSK1904529A" "I.BET.762" "LY2109761" "MG.132" "MK.1775" "MK.2206" "OSI.027" "OTX015" "P22077" "PLX.4720" "PRT062607" "VE.822" "AFATINIB" "ALISERTIB" "ALPELISIB" "AXITINIB" "BORTEZOMIB" "BUPARLISIB" "CAMPTOTHECIN" "CARMUSTINE" "CEDIRANIB" "CISPLATIN" "CRIZOTINIB" "CYCLOPHOSPHAMIDE" "CYTARABINE" "DABRAFENIB" "DASATINIB" "DINACICLIB" "DOCETAXEL" "ENTINOSTAT" "EPIRUBICIN" "ERLOTINIB" "FLUDARABINE" "FORETINIB" "FULVESTRANT" "GEFITINIB" "GEMCITABINE" "IBRUTINIB" "IRINOTECAN" "LAPATINIB" "LINSITINIB" "MITOXANTRONE" "NAVITOCLAX" "NELARABINE" "NILOTINIB" "NIRAPARIB" "OLAPARIB" "OSIMERTINIB" "OXALIPLATIN" "PACLITAXEL" "PALBOCICLIB" "PEVONEDISTAT" "RIBOCICLIB" "RUXOLITINIB" "SELUMETINIB" "SORAFENIB" "TALAZOPARIB" "TAMOXIFEN" "TASELISIB" "TEMOZOLOMIDE" "TENIPOSIDE" "TOPOTECAN" "TOZASERTIB" "TRAMETINIB" "UPROSERTIB" "VENETOCLAX" "VINBLASTINE" "VINCRISTINE" "VINORELBINE" "VORINOSTAT")
+drugs=( "IRINOTECAN")
 
 expid=1
 device='cuda:0'
@@ -149,7 +149,7 @@ file_paths = [
     "VISDS000772_prop_mat.csv", # Replace with your deconvolution file path
     "VISDS000772_interface_data.csv"      # Replace with your interface file path
 ]
-drugs = ["CRIZOTINIB"]
+drugs = ["IRINOTECAN"]
 cancer_sample_name = "CRC2"
 
 

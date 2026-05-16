@@ -1,4 +1,6 @@
+-
 Heterogeneity within the tumor microenvironment remains a major obstacle to precision oncology. Although single-cell RNA sequencing captures intratumoral gene expression diversity, most drug sensitivity models fail to account for spatial variations in drug-responsive cell populations, particularly across the tumor–stroma immune interface. To address this, we propose DeepTNR, a framework integrating deep graph contrastive learning with transfer learning to model spatial interactions within the TME. By incorporating tumor–stroma interface features, spatial autocorrelation, and proximity-based cellular interactions that capture distance dependent effects of effector cells on drug responsive target cells within local niches, DeepTNR enables spatially resolved drug sensitivity prediction. Applied to nine tumor types, with colorectal cancer (CRC) as a representative case, DeepTNR reveals that irinotecan exhibits the strongest sensitivity with significant spatial autocorrelation (Moran’s I). Spatial proximity effect analysis shows that local enrichment of immune and proliferative programs positively correlates with irinotecan sensitivity. These findings demonstrate DeepTNR's ability to spatially map intratumoral therapeutic heterogeneity and identify niche-specific vulnerabilities. 
+
 Step 0 "Installation and setup"
 -     
   1.Set up the Python environment

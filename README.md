@@ -1,22 +1,4 @@
-Spatially resolved prediction of drug sensitivity in the tumor microenvironment via deep graph contrastive and transfer learning
--
-Background
--
-Tumor microenvironment heterogeneity remains a key barrier to precision oncology. While single-cell RNA sequencing (scRNA-seq) captures intratumoral gene expression diversity, existing drug sensitivity models often overlook spatial variation in drug-responsive cell populations across tumor–stroma immune interface. As a result, they may overestimate overall sensitivity despite low local response or weak spatial clustering, compromising therapeutic efficacy.
-
-Methods
--
-To address this challenge, we present DeepTNR (Deep Learning for Tumor Niche Response), an innovative computational framework that integrates deep graph contrastive learning with transfer learning to model tumor-microenvironment interactions. The predicted drug sensitivity profiles are then combined with tumor-stroma immune interface features and spatial autocorrelation analysis to identify the most effective therapeutic candidates. We applied DeepTNR to spatial transcriptomic datasets from nine tumor types and selected colorectal cancer (CRC) as a case study due to its pronounced spatial heterogeneity and microinfiltrative architecture. 
-
-Results
--
-Analysis of eight colorectal cancer (CRC) specimens revealed distinct spatial patterns of drug sensitivity, influenced by the compartmental organization of malignant, stromal, and immune components. Carmustine exhibited significant sensitivity across the tumor region, with sensitive cells also detected in focal stromal microinfiltration zones, suggesting its potential to target both the tumor core and invasive margins. In contrast, docetaxel-sensitive cells were broadly distributed within tumor regions but largely absent from stromal microinfiltration zones, indicating limited efficacy against invasive tumor fronts that may harbor resistant subpopulations. Spatial autocorrelation analysis further supported these findings, with carmustine-sensitive cells showing strong clustering within tumor regions, consistent with its localized efficacy. However, high spatial autocorrelation alone can be misleading. In the case of axitinib, sensitive cells also exhibited strong clustering and high abundance, yet were predominantly localized within the stroma rather than the tumor core, highlighting the need to interpret spatial patterns in the context of tumor architecture. These findings underscore the importance of spatial autocorrelation as a quantitative metric to capture spatially confined drug sensitivity and to distinguish between locally concentrated and peripherally scattered therapeutic responses. 
-
-Conclusion
--
-This method captures both gene expression profiles and spatial distribution patterns within tissues, advancing the effectiveness of personalized cancer therapies.
-![Fig 1](https://github.com/user-attachments/assets/414940e5-8642-4730-aabf-61aba273ff90)
-
+Heterogeneity within the tumor microenvironment remains a major obstacle to precision oncology. Although single-cell RNA sequencing captures intratumoral gene expression diversity, most drug sensitivity models fail to account for spatial variations in drug-responsive cell populations, particularly across the tumor–stroma immune interface. To address this, we propose DeepTNR, a framework integrating deep graph contrastive learning with transfer learning to model spatial interactions within the TME. By incorporating tumor–stroma interface features, spatial autocorrelation, and proximity-based cellular interactions that capture distance dependent effects of effector cells on drug responsive target cells within local niches, DeepTNR enables spatially resolved drug sensitivity prediction. Applied to nine tumor types, with colorectal cancer (CRC) as a representative case, DeepTNR reveals that irinotecan exhibits the strongest sensitivity with significant spatial autocorrelation (Moran’s I). Spatial proximity effect analysis shows that local enrichment of immune and proliferative programs positively correlates with irinotecan sensitivity. These findings demonstrate DeepTNR's ability to spatially map intratumoral therapeutic heterogeneity and identify niche-specific vulnerabilities. 
 Step 0 "Installation and setup"
 -     
   1.Set up the Python environment

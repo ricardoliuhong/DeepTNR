@@ -64,7 +64,7 @@ is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad
 
 ```
  3.The tumor-stroma immune interface as revised based on pathologist's reference
- - 
+ -   [CRC1_region_interface.csv](https://github.com/user-attachments/files/27985160/CRC1_region_interface.csv)
 
 Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   

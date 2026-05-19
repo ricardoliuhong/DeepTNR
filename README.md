@@ -6,8 +6,10 @@ Step 0 "Installation and setup"
 -
 ```shell
 git clone https://github.com/ricardoliuhong/DeepTNR.git
-conda env create -f environment.yaml
+conda create -n deeptnr python=3.9 -y
 conda activate DeepTNR
+pip install -r requirements.txt
+
 ```
   2.Set up the R environment
  -

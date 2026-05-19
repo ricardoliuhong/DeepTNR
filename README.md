@@ -150,22 +150,13 @@ done
 
 
 ```
+ Step 3 "Installation and setup"
 
-Please view the following analysis in DeepTNR_Tutorial.ipynb!!!!
+Please view the following analysis in DeepTNR_Tutorial.ipynb!!!!   
 ---
--
-  3.Visualization of predicted results
- - 
 
-  4.Performing spatial autocorrelation analysis
--
+---
 
-  5.Performing spatial proximity effect analysis
--
-
-
-
-     
-    
-  
-
+### 1. 🎨 Visualization of Predicted Results
+### 2. 📍 Performing Spatial Autocorrelation Analysis
+### 3. 🔬 Performing Spatial Proximity Effect Analysis

@@ -63,6 +63,8 @@ import Interface as is
 is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad')
 
 ```
+ 3.The tumor-stroma immune interface as revised based on pathologist's reference
+ - 
 
 Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   

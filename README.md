@@ -128,7 +128,7 @@ scRNA_dataset='CRC1.h5ad'
 
 for drug in "${drugs[@]}"
 do
-    echo "Running crossgraph.py for drug: $drug"
+    echo "Running DeepTNR.py for drug: $drug"
     python -u crossgraph.py \
         --source_features "DeepTNR_Data/${drug}_Bulk_features.npy" \
         --target_features "DeepTNR_Data/scRNA_features.npy" \

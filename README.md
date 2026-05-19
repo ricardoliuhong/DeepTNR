@@ -76,18 +76,18 @@ drugs=( "IRINOTECAN")
 
 expid=1
 device='cuda:0'
-val_dataset='CRC2_val_adata.h5ad'  ### Modify the prefix when the data changes.  
+val_dataset='CRC1_val_adata.h5ad'  ### Modify the prefix when the data changes.  
 train_dataset='Bulk_train_adata.h5ad' ###No changes needed
 train_expression_file='Bulk_features.csv' ###No changes needed
 train_binary_labels_file='Bulk_train_labels.csv' ###No changes needed
 val_binary_labels_file='Bulk_val_labels.csv' ###No changes needed
-Spatial_dataset='CRC2.h5ad' ### Modify the prefix when the data changes.
+Spatial_dataset='CRC1.h5ad' ### Modify the prefix when the data changes.
 expression_file='ALL_expression.csv'  ###No changes needed
 binary_labels_file='ALL_label_binary_wf.csv'
-output_prefix='CRC2'  ### sample name
-visium_path='VISDS000772' ###  ST access number
+output_prefix='CRC1'  ### sample name
+visium_path='VISDS000771' ###  ST access number
 count_file='filtered_feature_bc_matrix.h5' ###No changes needed
-output_file='CRC2_DeepTNR.h5ad'     ###Modify the prefix when the data changes.
+output_file='CRC1_DeepTNR.h5ad'     ###Modify the prefix when the data changes.
 
 for drug in "${drugs[@]}"
 do
@@ -119,17 +119,20 @@ done
  - 
 In python
 ```shell
+
+drugs=("IRINOTECAN")
 device='cuda:0'
-Spatial_dataset='CRC2_DeepTNR.h5ad'
+scRNA_dataset='CRC1.h5ad'
+
 for drug in "${drugs[@]}"
 do
-    echo "Running DeepTNR.py for drug: $drug"
-    python -u DeepTNR.py \
+    echo "Running crossgraph.py for drug: $drug"
+    python -u crossgraph.py \
         --source_features "DeepTNR_Data/${drug}_Bulk_features.npy" \
         --target_features "DeepTNR_Data/scRNA_features.npy" \
         --source_edge_index "DeepTNR_Data/${drug}_Bulk_edge_index.npy" \
         --target_edge_index "DeepTNR_Data/scRNA_edge_index.npy" \
-        --Spatial_dataset "DeepTNR_Data/$Spatial_dataset" \
+        --scRNA_dataset "DeepTNR_Data/$scRNA_dataset" \
         --Drug $drug \
         --source_labels "DeepTNR_Data/${drug}_Bulk_labels.npy" \
         --model "GAT" \ 
@@ -137,11 +140,17 @@ do
 
     echo "Finished running crossgraph.py for drug: $drug"
 done
+
+
+
+
+
+
 ```
   3.Visualization of predicted results
  - 
  In python
- ###Here we use the CEDIRANIB prediction results as an example
+ ###Here we use the IRINOTECAN prediction results as an example
 ```Python
 import Visualization as vis
 file_paths = [
@@ -150,7 +159,7 @@ file_paths = [
     "VISDS000772_interface_data.csv"      # Replace with your interface file path
 ]
 drugs = ["IRINOTECAN"]
-cancer_sample_name = "CRC2"
+cancer_sample_name = "CRC1"
 
 
 file_paths = tuple(file_paths)

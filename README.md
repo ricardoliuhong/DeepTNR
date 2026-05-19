@@ -1,6 +1,5 @@
--
 DeepTNR: predicting tumor drug sensitivity from spatial transcriptomics with deep graph contrastive and transfer learning
-
+--
 Step 0 "Installation and setup"
 -     
   1.Set up the Python environment

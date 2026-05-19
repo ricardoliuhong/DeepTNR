@@ -73,7 +73,7 @@ Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep
 
 ```shell
 
-drugs=( "IRINOTECAN")
+drugs=("X5.FLUOROURACIL" "IRINOTECAN" "OXALIPLATIN" )
 
 expid=1
 device='cuda:0'
@@ -84,7 +84,7 @@ train_binary_labels_file='Bulk_train_labels.csv' ###No changes needed
 val_binary_labels_file='Bulk_val_labels.csv' ###No changes needed
 Spatial_dataset='CRC1.h5ad' ### Modify the prefix when the data changes.
 expression_file='ALL_expression.csv'  ###No changes needed
-binary_labels_file='ALL_label_binary_wf.csv'
+binary_labels_file='ALL_label_binary_wf.csv'###No changes needed
 output_prefix='CRC1'  ### sample name
 visium_path='VISDS000771' ###  ST access number
 count_file='filtered_feature_bc_matrix.h5' ###No changes needed
@@ -121,9 +121,9 @@ done
 In python
 ```shell
 
-drugs=("IRINOTECAN")
+drugs=("X5.FLUOROURACIL" "IRINOTECAN" "OXALIPLATIN" )
 device='cuda:0'
-scRNA_dataset='CRC1.h5ad'
+scRNA_dataset='CRC1.h5ad'  
 
 for drug in "${drugs[@]}"
 do

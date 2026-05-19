@@ -1,0 +1,45 @@
+#DeepTNR
+
+# Core dependencies
+torch==2.2.1
+torch-geometric==2.5.3
+numpy==1.26.4
+pandas==2.2.1
+scipy==1.12.0
+scikit-learn==1.4.1.post1
+
+# Spatial analysis
+libpysal==4.8.1
+esda==2.5.1
+statsmodels==0.14.1
+
+# Single-cell & spatial transcriptomics
+scanpy==1.9.8
+anndata==0.10.6
+scvi-tools==1.1.6.post2
+cell2location==0.1.4
+
+# Visualization
+matplotlib==3.8.3
+seaborn==0.13.2
+
+# Hyperparameter optimization
+optuna==3.6.1
+
+# Tabular ML
+tabpfn==2.1.0
+
+# Graph & network
+dgl==1.1.3
+networkx==3.2.1
+
+# Imbalanced learning
+imbalanced-learn==0.12.3
+
+# Utilities
+joblib==1.3.2
+tqdm==4.66.2
+
+# Optional but recommended
+torch-scatter>=2.1.0
+torch-sparse>=0.6.18

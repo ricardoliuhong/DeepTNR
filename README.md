@@ -60,7 +60,7 @@ for (dir in data_dirs) {
 -
 ```python
 import Interface as is
-is.interface('CRC2.h5ad', 'VISDS000772_interface_data.csv', 'CRC2_annotated.h5ad')
+is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad')
 
 ```
 

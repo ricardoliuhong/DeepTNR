@@ -150,7 +150,8 @@ done
 
 
 ```
- Step 3 "Visualize the prediction results and explore spatial autocorrelation and proximity effects!!
+ Step 3 "Visualize the prediction results and explore spatial autocorrelation and proximity effects!! 
+     Please  in https://github.com/ricardoliuhong/DeepTNR/blob/dd6e85843e13b21367e9562359d2dc35f1696d2b/DeepTNR_Tutorial.ipynb
 "
 -
 Please view the following analysis in DeepTNR_Tutorial.ipynb!!!!   

@@ -2,7 +2,7 @@ Please place the data files in the "Spatial Transcriptomics Data Preprocessing" 
 
 ```
 Spatial Transcriptomics Data Preprocessing/
-├── VISDS000772/
+├── VISDS000771/
 ├── ALL_expression.csv
 ├── ALL_label_binary_wf.csv
 ├── Interface.py

@@ -5,15 +5,59 @@ from scipy.ndimage import gaussian_filter1d, distance_transform_edt
 from scipy.spatial import KDTree
 from scipy.stats import spearmanr
 import os
+import random
 from typing import Optional, List, Tuple, Dict, Any
 import warnings
 warnings.filterwarnings('ignore')
+from matplotlib import rcParams
+
+rcParams['font.weight'] = 'bold'
+rcParams['axes.labelweight'] = 'bold'
+rcParams['axes.titleweight'] = 'bold'
+sensitivity_colors = {
+    'Sensitive': '#FF0000',
+    'Resistant': '#0072B2',
+    'Unknown': '#808080'
+}
 
 try:
     from anndata import AnnData
 except ImportError:
     AnnData = Any
     print("Warning: anndata not installed, using Any type for AnnData")
+
+# ============================================================
+# SET RANDOM SEEDS FOR REPRODUCIBILITY
+# ============================================================
+def set_random_seeds(seed: int = 42):
+    """
+    Set random seeds for all random number generators to ensure reproducibility.
+    
+    Parameters:
+    -----------
+    seed : int
+        Random seed value (default: 42)
+    """
+    random.seed(seed)
+    np.random.seed(seed)
+    
+    # Optional: if using tensorflow or pytorch, add those here
+    # try:
+    #     import torch
+    #     torch.manual_seed(seed)
+    #     torch.cuda.manual_seed_all(seed)
+    # except ImportError:
+    #     pass
+    #     
+    # try:
+    #     import tensorflow as tf
+    #     tf.random.set_seed(seed)
+    # except ImportError:
+    #     pass
+
+# Set default seed at module level
+DEFAULT_RANDOM_SEED = 42
+set_random_seeds(DEFAULT_RANDOM_SEED)
 
 def extract_obs_from_adata(adata, use_raw: bool = False) -> pd.DataFrame:
     if hasattr(adata, 'obs'):
@@ -119,17 +163,27 @@ def calculate_proximity_scores(df: pd.DataFrame,
                                dist_col: str = 'interface_dist',
                                radius: float = 0.1,
                                min_neighbors: int = 3,
-                               verbose: bool = False) -> pd.DataFrame:
+                               verbose: bool = False,
+                               random_seed: int = 42) -> pd.DataFrame:
     """
     计算每种细胞类型的邻近效应评分
     公式: P_k = correlation(邻居中细胞类型k的丰度, 中心spot的药物敏感性)
+    
+    Parameters:
+    -----------
+    random_seed : int
+        Random seed for reproducibility (default: 42)
     """
+    # Set seed for this function
+    np.random.seed(random_seed)
+    
     df_copy = df.copy()
     
     if verbose:
         print(f"    Total spots: {len(df_copy)}")
         print(f"    Using radius: {radius}")
         print(f"    Min neighbors: {min_neighbors}")
+        print(f"    Random seed: {random_seed}")
     
     # 获取坐标
     coords = df_copy[['array_col', 'array_row']].values
@@ -233,14 +287,26 @@ def permutation_test(df: pd.DataFrame,
                      n_perm: int = 50,
                      radius: float = 0.1,
                      min_neighbors: int = 3,
-                     verbose: bool = False) -> Tuple[pd.DataFrame, Dict]:
+                     verbose: bool = False,
+                     random_seed: int = 42) -> Tuple[pd.DataFrame, Dict]:
     """
     空间置换检验：重排细胞类型标签
+    
+    Parameters:
+    -----------
+    random_seed : int
+        Random seed for reproducibility (default: 42)
     """
+    # Set seed for reproducibility
+    np.random.seed(random_seed)
+    
     if verbose:
+        print(f"  Random seed: {random_seed}")
         print("  Calculating real proximity scores...")
+    
     real_prox_df = calculate_proximity_scores(
-        df, cell_types, cell_type_cols, drug_col, dist_col, radius, min_neighbors, verbose
+        df, cell_types, cell_type_cols, drug_col, dist_col, radius, min_neighbors, 
+        verbose=verbose, random_seed=random_seed
     )
     
     if len(real_prox_df) == 0:
@@ -281,8 +347,12 @@ def permutation_test(df: pd.DataFrame,
     y = df[drug_col].values
     
     for i in range(n_perm):
+        # Set seed for each permutation iteration for consistency
+        perm_seed = random_seed + i
+        np.random.seed(perm_seed)
+        
         if verbose and (i + 1) % 10 == 0:
-            print(f"    Permutation {i+1}/{n_perm}")
+            print(f"    Permutation {i+1}/{n_perm} (seed={perm_seed})")
         
         df_perm = df.copy()
         for ct_col in cell_type_cols:
@@ -517,10 +587,23 @@ def analyze_spatial_proximity_effect(adata,
                                      use_raw_obs: bool = False,
                                      verbose: bool = True,
                                      radius: float = 0.1,
-                                     min_neighbors: int = 3) -> Dict:
+                                     min_neighbors: int = 3,
+                                     random_seed: int = 42) -> Dict:
+    """
+    Main analysis function with random seed control.
+    
+    Parameters:
+    -----------
+    random_seed : int
+        Random seed for reproducibility throughout the analysis (default: 42)
+    """
+    # Set random seeds at the beginning of analysis
+    set_random_seeds(random_seed)
+    
     if verbose:
         print("=" * 60)
         print(f"Starting spatial proximity effect analysis for {sample_id}")
+        print(f"Random seed: {random_seed}")
         print("=" * 60)
     
     if verbose:
@@ -584,7 +667,8 @@ def analyze_spatial_proximity_effect(adata,
         n_perm=n_perm,
         radius=radius,
         min_neighbors=min_neighbors,
-        verbose=verbose
+        verbose=verbose,
+        random_seed=random_seed
     )
     
     sig_cells = prox_df[prox_df["p_value"] < 0.05] if len(prox_df) > 0 else pd.DataFrame()
@@ -637,7 +721,8 @@ def analyze_spatial_proximity_effect(adata,
         'significant_cells': sig_cells,
         'sample_id': sample_id,
         'drug_col': drug_col,
-        'drug_name': drug_name
+        'drug_name': drug_name,
+        'random_seed': random_seed
     }
     
     if verbose:
@@ -649,16 +734,32 @@ def analyze_spatial_proximity_effect(adata,
 
 def batch_analyze_spatial_proximity(adata_dict: Dict[str, Any],
                                     drug_name: str = "Irinotecan",
+                                    random_seed: int = 42,
                                     **kwargs) -> Dict[str, Dict]:
+    """
+    Batch analysis with consistent random seed across samples.
+    
+    Parameters:
+    -----------
+    random_seed : int
+        Base random seed for reproducibility (default: 42)
+        Each sample will use a different seed: random_seed + sample_index
+    """
     results = {}
-    for sample_id, adata in adata_dict.items():
+    for i, (sample_id, adata) in enumerate(adata_dict.items()):
+        # Use different seed for each sample for independence
+        sample_seed = random_seed + i
+        
         print(f"\nProcessing sample: {sample_id}")
+        print(f"Using random seed: {sample_seed}")
         print("-" * 40)
+        
         try:
             result = analyze_spatial_proximity_effect(
                 adata, 
                 drug_name=drug_name,
                 sample_id=sample_id,
+                random_seed=sample_seed,
                 **kwargs
             )
             results[sample_id] = result
@@ -687,4 +788,16 @@ def summarize_results(results_dict: Dict[str, Dict]) -> pd.DataFrame:
         return pd.DataFrame()
 
 if __name__ == "__main__":
+    # Example usage with random seed
+    # set_random_seeds(42)  # Already set at module level
+    
+    # For custom seed in analysis:
+    # results = analyze_spatial_proximity_effect(
+    #     adata, 
+    #     drug_name="Irinotecan",
+    #     sample_id="CRC1",
+    #     random_seed=123,  # Custom seed
+    #     verbose=True
+    # )
+    
     pass

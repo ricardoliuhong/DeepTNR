@@ -7,7 +7,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 from statsmodels.stats.multitest import multipletests
+from matplotlib import rcParams
 
+rcParams['font.weight'] = 'bold'
+rcParams['axes.labelweight'] = 'bold'
+rcParams['axes.titleweight'] = 'bold'
 sensitivity_colors = {
     'Sensitive': '#FF0000',
     'Resistant': '#0072B2',
@@ -231,9 +235,11 @@ def analyze_and_plot_spatial_autocorrelation(adata_path, drugs, cancer_sample_na
         
         plot_path = os.path.join(plot_folder, f"{drug}_spatial_autocorrelation.png")
         plt.savefig(plot_path, dpi=600, bbox_inches='tight')
-        plt.close()
         
-        print(f"  - {drug}: Plot saved")
+        # Force display in Jupyter Notebook
+        plt.show(block=True)
+        
+        print(f"  - {drug}: Plot saved to {plot_path}")
     
     print("\n" + "="*60)
     print("RESULTS SUMMARY")
@@ -289,4 +295,3 @@ def analyze_and_plot_spatial_autocorrelation(adata_path, drugs, cancer_sample_na
     print(f"   - Plots folder: {plot_folder}")
     
     return results_df
-

@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-# 多层次领域分类器
 class DomainAdversarialClassifier(nn.Module):
     def __init__(self, input_dim, hidden_dim):
         super(DomainAdversarialClassifier, self).__init__()
@@ -30,6 +29,5 @@ class GradientReversalLayer(torch.autograd.Function):
     def backward(ctx, grad_output):
         return grad_output.neg() * ctx.alpha, None
 
-# 动态调整alpha
 def adjust_alpha(epoch, max_alpha=1.0, gamma=10.0):
     return 2.0 / (1.0 + np.exp(-gamma * epoch)) - 1.0

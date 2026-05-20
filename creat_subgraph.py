@@ -3,7 +3,6 @@ import random
 from torch_geometric.data import Data
 from torch_geometric.utils import k_hop_subgraph
 
-# 手动实现 add_random_edges 和 remove_random_edges 函数
 def add_random_edges(edge_index, num_nodes, edge_modify_ratio):
     num_edges_to_add = int(edge_modify_ratio * edge_index.size(1))
     new_edges = torch.randint(0, num_nodes, (2, num_edges_to_add))
@@ -22,13 +21,11 @@ def generate_subgraphs(features, edge_index, num_subgraphs=5, walk_length=3, edg
     num_edges = edge_index.size(1)
 
     for _ in range(num_subgraphs):
-        # 修改边
         if add_edges:
             modified_edge_index, _ = add_random_edges(edge_index, num_nodes, edge_modify_ratio)
         else:
             modified_edge_index, _ = remove_random_edges(edge_index, edge_modify_ratio)
 
-        # 采样节点
         subset, new_edge_index, _, _ = k_hop_subgraph(
             random.sample(range(num_nodes), int(sample_ratio * num_nodes)),
             walk_length,
@@ -36,14 +33,11 @@ def generate_subgraphs(features, edge_index, num_subgraphs=5, walk_length=3, edg
             relabel_nodes=True
         )
 
-        # 提取子集特征
         subgraph_features = features[subset]
 
-        # 如果noise_factor > 0，添加噪声到特征
         if noise_factor > 0:
             subgraph_features = augment_features(subgraph_features, noise_factor)
 
-        # 创建PyG的Data对象
         subgraph_data = Data(x=subgraph_features, edge_index=new_edge_index)
 
         subgraphs.append(subgraph_data)

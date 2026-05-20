@@ -24,7 +24,7 @@ class Contrast(nn.Module):
         z2_norm = torch.norm(z2, dim=-1, keepdim=True)
         dot_numerator = torch.mm(z1, z2.t())
         dot_denominator = torch.mm(z1_norm, z2_norm.t())
-        sim_matrix = torch.exp(dot_numerator / (dot_denominator + 1e-8) / self.tau)  # 使用 tau 参数
+        sim_matrix = torch.exp(dot_numerator / (dot_denominator + 1e-8) / self.tau)  
         return sim_matrix
 
     def forward(self, za, zb):
@@ -39,7 +39,7 @@ class Contrast(nn.Module):
         return za_proj, zb_proj
 
 def info_nce_loss(model, za_proj, zb_proj, tau):
-    sim_matrix = model.sim(za_proj, zb_proj) / tau  # 使用 tau 参数
+    sim_matrix = model.sim(za_proj, zb_proj) / tau  
     labels = torch.arange(za_proj.size(0)).to(za_proj.device)
     positive_pairs = sim_matrix[labels, labels].view(-1, 1)
     negative_pairs = sim_matrix[labels.unsqueeze(1) != labels.unsqueeze(0)].view(za_proj.size(0), -1)

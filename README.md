@@ -70,7 +70,8 @@ is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad
  
  4.Visium HD tumor-periphery domain assignment in Python (Visium HD only)
 
-For Visium HD 8 um bins, assign `Tumor` / `50 micron` / `Tissue` domains following Oliveira et al. (Nat Genet 2025, Fig. 4). Place the Visium HD AnnData, optional deconvolution metadata parquet, and Space Ranger `binned_outputs/square_008um/spatial/` files under your working directory (or pass absolute paths).
+For Visium HD 8 μm bins, `VisiumHD_domain.py` assigns three domain labels: Tumor, 50 micron, and Tissue. The implementation follows Oliveira et al. (Nat Genet 2025, Fig. 4). Place the Visium HD AnnData, optional deconvolution metadata parquet, and Space Ranger spatial files under your working directory, or pass absolute paths.
+
 
 Example Visium HD inputs: [CRC1.h5ad](https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=drive_link); [P1CRC_Metadata.parquet](https://github.com/10XGenomics/HumanColonCancer_VisiumHD/raw/main/MetaData/P1CRC_Metadata.parquet); [tissue_positions.parquet.gz](https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM8594nnn/GSM8594567/suppl/GSM8594567_P1CRC_tissue_positions.parquet.gz); [scalefactors_json.json.gz](https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM8594nnn/GSM8594567/suppl/GSM8594567_P1CRC_scalefactors_json.json.gz). Put `tissue_positions.parquet` and `scalefactors_json.json` into `HumanColonCancer_VisiumHD/binned_outputs/square_008um/spatial/`.
 

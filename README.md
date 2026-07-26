@@ -64,8 +64,10 @@ import Interface as is
 is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad')
 
 ```
+ 
  3.The tumor-stroma immune interface as revised based on pathologist's reference  : [Data][CRC1_region_interface.csv](https://github.com/user-attachments/files/27985160/CRC1_region_interface.csv)
 
+ 
  4.Visium HD tumor-periphery domain assignment in Python (Visium HD only)
 
 For Visium HD 8 um bins, assign `Tumor` / `50 micron` / `Tissue` domains following Oliveira et al. (Nat Genet 2025, Fig. 4). Place the Visium HD AnnData, optional deconvolution metadata parquet, and Space Ranger `binned_outputs/square_008um/spatial/` files under your working directory (or pass absolute paths).

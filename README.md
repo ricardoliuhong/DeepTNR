@@ -65,7 +65,41 @@ is.interface('CRC1.h5ad', 'VISDS000771_interface_data.csv', 'CRC1_annotated.h5ad
 
 ```
  3.The tumor-stroma immune interface as revised based on pathologist's reference  : [Data][CRC1_region_interface.csv](https://github.com/user-attachments/files/27985160/CRC1_region_interface.csv)
- 
+
+ 4.Visium HD tumor-periphery domain assignment in Python (Visium HD only)
+
+For Visium HD 8 um bins, assign `Tumor` / `50 micron` / `Tissue` domains following Oliveira et al. (Nat Genet 2025, Fig. 4). Place the Visium HD AnnData, optional deconvolution metadata parquet, and Space Ranger `binned_outputs/square_008um/spatial/` files under your working directory (or pass absolute paths).
+
+Example Visium HD inputs: [CRC1.h5ad](https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=drive_link); [P1CRC_Metadata.parquet](https://github.com/10XGenomics/HumanColonCancer_VisiumHD/raw/main/MetaData/P1CRC_Metadata.parquet); [tissue_positions.parquet.gz](https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM8594nnn/GSM8594567/suppl/GSM8594567_P1CRC_tissue_positions.parquet.gz); [scalefactors_json.json.gz](https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM8594nnn/GSM8594567/suppl/GSM8594567_P1CRC_scalefactors_json.json.gz). Put `tissue_positions.parquet` and `scalefactors_json.json` into `HumanColonCancer_VisiumHD/binned_outputs/square_008um/spatial/`.
+
+```python
+import VisiumHD_domain as vhd
+
+vhd.visiumhd_domain(
+    'CRC1.h5ad',
+    metadata_path='P1CRC_Metadata.parquet',
+    spaceranger_root='HumanColonCancer_VisiumHD',
+    output_h5ad_path='CRC1_VisiumHD_domain.h5ad',
+    distance_um=50,
+    min_tumor_neighbors=25,
+    # tumor_label='Tumor II',  # optional; leave unset to auto-detect from DeconvolutionLabel1
+)
+```
+
+Or from the command line:
+
+```shell
+python -u VisiumHD_domain.py \
+    --adata CRC1.h5ad \
+    --metadata P1CRC_Metadata.parquet \
+    --spaceranger-root HumanColonCancer_VisiumHD \
+    --output-h5ad CRC1_VisiumHD_domain.h5ad \
+    --outdir VisiumHD_domain_outputs \
+    --distance-um 50 \
+    --min-tumor-neighbors 25
+```
+
+The annotated AnnData stores domain labels in `adata.obs['VisiumHD_domain_py']`. Use this file for downstream drug-sensitivity comparison by region (Step 3).
 
 Step 2 Predicting drug sensitivity in spatial transcriptomics of tumors via deep graph contrastive and transfer learning"
 -   

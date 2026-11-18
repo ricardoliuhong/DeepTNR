@@ -201,3 +201,5 @@ Happy analyzing! 🚀
    1. 🎨 Visualization of Predicted Results
    2. 📍 Performing Spatial Autocorrelation Analysis
    3. 🔬 Performing Spatial Proximity Effect Analysis
+
+# If you have any questions, please contact liuhongoncogene@outlook.com or QQ 2779847993.   ꈍ◡ꈍ📍

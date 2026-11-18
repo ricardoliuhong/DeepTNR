@@ -185,12 +185,11 @@ done
 
 
 
-
 ```
 Step 3 "Visualize the prediction results and explore spatial autocorrelation and proximity effects!! 
 -
 Please view the DeepTNR_Tutorial.ipynb at: 
-🔗 https://github.com/ricardoliuhong/DeepTNR/blob/8eec72c8889ecda43c0bd68c8cc5adbcb94ccd88/DeepTNR_Tutorial.ipynb
+🔗 https://github.com/ricardoliuhong/DeepTNR/blob/65914ff2cef041fedb35be91a9398d64c5104d76/DeepTNR_Tutorial.ipynb
 -
  And download the necessary data from: 
 🔗 https://drive.google.com/drive/folders/1h1RgI21EHF5ndKqlnwvj5-itj1cWAo11?usp=drive_link

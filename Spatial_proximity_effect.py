@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial import KDTree
 from scipy.stats import ttest_ind
 import os
+import pickle
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -12,7 +13,6 @@ try:
 except ImportError:
     AnnData = type('AnnData', (), {})
 
-# ---------- Core function: calculate distance to effector cells ----------
 def add_distance_to_celltype(df, effector_cell_type, cell_type_prefix='q95_spot_factors',
                              coord_cols=['array_col', 'array_row'], threshold=0):
     df = df.copy()
@@ -29,7 +29,6 @@ def add_distance_to_celltype(df, effector_cell_type, cell_type_prefix='q95_spot_
     df[f'dist_to_{effector_cell_type}'] = distances
     return df
 
-# ---------- Helper functions ----------
 def extract_obs_from_adata(adata, use_raw=False):
     if use_raw and hasattr(adata, 'raw') and hasattr(adata.raw, 'obs'):
         return adata.raw.obs.copy()
@@ -54,33 +53,75 @@ def extract_cell_types(df, prefix='q95_spot_factors'):
     cell_types = [c.replace(prefix, "") for c in cell_type_cols]
     return cell_types, cell_type_cols
 
-# ---------- Permutation test ----------
 def permutation_test_for_pair(df, effector_ct, target_ct,
                               target_col, effector_quantile, target_quantile,
                               cutoff, comparison, min_pairs,
                               cell_type_prefix, coord_cols, n_perm=50):
     perm_effects = []
-    effector_col_name = f"{cell_type_prefix}{effector_ct}"
+
+    target_col_name = f"{cell_type_prefix}{target_ct}"
+    if target_col_name not in df.columns:
+        return perm_effects
+    thresh = df[target_col_name].quantile(target_quantile)
+    df_target_all = df[df[target_col_name] > thresh].copy()
+    if len(df_target_all) < min_pairs:
+        return perm_effects
+
+    effector_col = f"{cell_type_prefix}{effector_ct}"
+    if effector_col not in df_target_all.columns:
+        return perm_effects
+    effector_threshold = df_target_all[effector_col].quantile(effector_quantile)
+    df_target_all = add_distance_to_celltype(df_target_all, effector_ct,
+                                             cell_type_prefix=cell_type_prefix,
+                                             coord_cols=coord_cols,
+                                             threshold=effector_threshold)
+
+    dist_col = f'dist_to_{effector_ct}'
+
+    if cutoff is None:
+        cutoff = np.nanmedian(df_target_all[dist_col].values)
+        if cutoff == 0:
+            cutoff = np.nanpercentile(df_target_all[dist_col], 75)
+            if cutoff == 0:
+                cutoff = np.nanmax(df_target_all[dist_col]) * 0.5
+
+    near_mask = df_target_all[dist_col].values < cutoff
+    near_indices = np.where(near_mask)[0]
+    far_indices = np.where(~near_mask)[0]
+    n_near = len(near_indices)
+    if n_near < min_pairs or len(far_indices) < n_near:
+        return perm_effects
+
+    if comparison == 'farthest':
+        far_dists = df_target_all[dist_col].values[far_indices]
+        sorted_idx = np.argsort(far_dists)[::-1]
+        far_selected = far_indices[sorted_idx[:n_near]]
+    else:
+        np.random.seed(42)
+        far_selected = np.random.choice(far_indices, n_near, replace=False)
+
+    target_vals_all = df_target_all[target_col].values
+
     for _ in range(n_perm):
-        df_perm = df.copy()
-        df_perm[effector_col_name] = np.random.permutation(df_perm[effector_col_name].values)
-        res = compute_pair_effect_custom(
-            df_perm, effector_ct, target_ct,
-            target_col=target_col,
-            effector_quantile=effector_quantile,
-            target_quantile=target_quantile,
-            cutoff=cutoff,
-            comparison=comparison,
-            min_pairs=min_pairs,
-            cell_type_prefix=cell_type_prefix,
-            coord_cols=coord_cols,
-            verbose=False
-        )
-        if res is not None and not np.isnan(res['cohens_d']):
-            perm_effects.append(res['cohens_d'])
+        perm_vals = np.random.permutation(target_vals_all)
+        near_vals = perm_vals[near_indices]
+        far_vals = perm_vals[far_selected]
+
+        near_clean = near_vals[~np.isnan(near_vals)]
+        far_clean = far_vals[~np.isnan(far_vals)]
+        if len(near_clean) < min_pairs or len(far_clean) < min_pairs:
+            continue
+
+        n1, n2 = len(near_clean), len(far_clean)
+        mean1, mean2 = np.mean(near_clean), np.mean(far_clean)
+        std1, std2 = np.std(near_clean, ddof=1), np.std(far_clean, ddof=1)
+        pooled_sd = np.sqrt(((n1-1)*std1**2 + (n2-1)*std2**2) / (n1+n2-2))
+        d = (mean1 - mean2) / pooled_sd if pooled_sd > 0 else np.nan
+        if not np.isnan(d):
+            perm_effects.append(d)
+
     return perm_effects
 
-# ---------- Calculate proximity effect for a single pair ----------
 def compute_pair_effect_custom(df, effector_ct, target_ct,
                                target_col='CRC2_Irinotecan',
                                effector_quantile=0.75,
@@ -91,7 +132,6 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
                                cell_type_prefix='q95_spot_factors',
                                coord_cols=['array_col', 'array_row'],
                                verbose=False):
-    # 1. Filter target cells
     df_work = df.copy()
     target_col_name = f"{cell_type_prefix}{target_ct}"
     if target_col_name not in df_work.columns:
@@ -103,7 +143,6 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
     if len(df_work) < min_pairs:
         return None
 
-    # 2. Calculate distance to effector cells
     effector_col = f"{cell_type_prefix}{effector_ct}"
     if effector_col not in df_work.columns:
         raise ValueError(f"Column {effector_col} not found.")
@@ -115,7 +154,6 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
 
     dist_col = f'dist_to_{effector_ct}'
 
-    # 3. Determine cutoff
     if cutoff is None:
         cutoff = np.nanmedian(df_work[dist_col].values)
         if cutoff == 0:
@@ -123,7 +161,6 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
             if cutoff == 0:
                 cutoff = np.nanmax(df_work[dist_col]) * 0.5
 
-    # 4. Group near/far neighbors
     near_mask = df_work[dist_col] < cutoff
     near_indices = np.where(near_mask)[0]
     far_indices = np.where(~near_mask)[0]
@@ -131,7 +168,6 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
     if n_near < min_pairs or len(far_indices) < n_near:
         return None
 
-    # Match farthest neighbors
     if comparison == 'farthest':
         far_dists = df_work[dist_col].values[far_indices]
         sorted_idx = np.argsort(far_dists)[::-1]
@@ -164,8 +200,7 @@ def compute_pair_effect_custom(df, effector_ct, target_ct,
         'cutoff': cutoff
     }
 
-# ---------- Main analysis function ----------
-def analyze_spatial_proximity_effect(adata,
+def analyze_proximity_custom_summary(adata,
                                      drug_name="Irinotecan",
                                      sample_id="CRC1",
                                      effector_celltypes=None,
@@ -179,7 +214,8 @@ def analyze_spatial_proximity_effect(adata,
                                      use_raw_obs=False,
                                      save_figures=True,
                                      output_dir="figure_outputs",
-                                     verbose=True):
+                                     verbose=True,
+                                     save_path=None):
     if verbose:
         print("="*60)
         print(f"Custom proximity analysis (summary) for {sample_id} - {drug_name}")
@@ -223,7 +259,7 @@ def analyze_spatial_proximity_effect(adata,
             print(f"\nEffector: {effector_ct}")
         for target_ct in target_celltypes:
             if verbose:
-                print(f"  -> Target: {target_ct}", end=' ')
+                print(f"  → Target: {target_ct}", end=' ')
             res = compute_pair_effect_custom(
                 df, effector_ct, target_ct,
                 target_col=drug_col,
@@ -236,7 +272,7 @@ def analyze_spatial_proximity_effect(adata,
             )
             if res is not None:
                 all_results.append(res)
-                pair_key = f"{effector_ct}->{target_ct}"
+                pair_key = f"{effector_ct} → {target_ct}"
                 if n_perm > 0:
                     perm_effects = permutation_test_for_pair(
                         df, effector_ct, target_ct,
@@ -254,7 +290,7 @@ def analyze_spatial_proximity_effect(adata,
                 else:
                     perm_dict[pair_key] = [0]
                 if verbose:
-                    print(f"n_near={res['n_near']}, n_far={res['n_far']}, d={res['cohens_d']:.3f}")
+                    print(f"n_near={res['n_near']}, n_far={res['n_far']}, d={res['cohens_d']:.3f}, perm_n={len(perm_dict[pair_key])}")
             else:
                 if verbose:
                     print("(insufficient pairs)")
@@ -264,30 +300,34 @@ def analyze_spatial_proximity_effect(adata,
         return None
 
     prox_df = pd.DataFrame(all_results)
-    plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save_figures, output_dir)
+    prox_df['pair'] = prox_df['effector'] + ' → ' + prox_df['target']
+
+    if save_path is not None:
+        with open(save_path, 'wb') as f:
+            pickle.dump({'prox_df': prox_df, 'perm_dict': perm_dict}, f)
+        if verbose:
+            print(f"Results saved to {save_path}")
+
+    if save_figures:
+        plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save_figures, output_dir)
 
     return {'prox_df': prox_df, 'perm_scores': perm_dict}
 
-# ---------- Plotting function (only adds 'ns' annotation, otherwise unchanged) ----------
 def plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save, output_dir):
-    """
-    Two-panel summary plot, strictly following the original plot_proximity_effect style.
-    - Left panel: Effect size bar plot + significance stars (gray 'ns' for p>=0.05)
-    - Right panel: Permutation confidence intervals (median +- 95% CI), x-axis fixed to [-1, 1]
-    """
+    plt.rcParams.update({'font.size': 14})
+
     if len(prox_df) == 0:
         print("No data to plot.")
         return
 
-    # Create pair labels
-    prox_df['pair'] = prox_df['effector'] + ' -> ' + prox_df['target']
+    prox_df = prox_df.copy()
+    prox_df['pair'] = prox_df['effector'] + ' → ' + prox_df['target']
     plot_df = prox_df.sort_values('cohens_d', ascending=False)
     ordered_pairs = plot_df['pair'].tolist()
 
     scores = plot_df['cohens_d'].values
     pvals = plot_df['p_value'].values
 
-    # Build perm_summary (consistent with original format)
     perm_summary = pd.DataFrame({
         "median": [np.median(perm_dict.get(pair, [0])) for pair in ordered_pairs],
         "low": [np.percentile(perm_dict.get(pair, [0]), 2.5) if len(perm_dict.get(pair, [])) > 1 else -0.1 for pair in ordered_pairs],
@@ -297,7 +337,6 @@ def plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save, output_dir
     fig, axes = plt.subplots(1, 2, figsize=(12, 0.5 * len(ordered_pairs) + 1), sharey=True)
     y_pos = np.arange(len(ordered_pairs))
 
-    # ---- Left panel: Effect size bar plot ----
     colors = ['#d95f5f' if v > 0 else '#5f8fd9' for v in scores]
     axes[0].barh(y_pos, scores, color=colors)
     axes[0].axvline(0, color='gray', linestyle='--')
@@ -306,28 +345,21 @@ def plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save, output_dir
     axes[0].set_xlabel("Cell proximity score (Cohen's d)")
     axes[0].set_title(f"Observed cell proximity effect of {drug_name}")
 
-    # Significance stars (show 'ns' for p>=0.05)
     for i, (score, p) in enumerate(zip(scores, pvals)):
         x_offset = 0.005 if score > 0 else -0.005
         ha = 'left' if score > 0 else 'right'
-        
+
         if p < 0.001:
             label = '***'
-            color = 'black'
         elif p < 0.01:
             label = '**'
-            color = 'black'
         elif p < 0.05:
             label = '*'
-            color = 'black'
         else:
             label = 'ns'
-            color = 'black'
-            x_offset = 0.005 if score > 0 else -0.005  # Keep consistent offset with stars
-        
-        axes[0].text(score + x_offset, i, label, va='center', ha=ha, fontsize=10, color=color)
 
-    # ---- Right panel: Permutation confidence intervals (identical to original) ----
+        axes[0].text(score + x_offset, i, label, va='center', ha=ha, fontsize=10, color='black')
+
     axes[1].errorbar(
         perm_summary["median"], y_pos,
         xerr=[
@@ -341,7 +373,7 @@ def plot_dual_summary(prox_df, perm_dict, sample_id, drug_name, save, output_dir
     axes[1].set_yticklabels(ordered_pairs)
     axes[1].set_title("Spatially permuted")
     axes[1].set_xlabel("Median proximity score (95% CI)")
-    axes[1].set_xlim(-1, 1)   # Consistent with original
+    axes[1].set_xlim(-1, 1)
 
     plt.tight_layout()
     if save:
